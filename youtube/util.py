@@ -77,7 +77,7 @@ class DownloadSoundFile(object):
     extract and save sound file from video link
     """
 
-    def __init__(self, artistName, waitTime=20):
+    def __init__(self, artistName, waitTime=20, headless=True):
         """__init__
 
         Parameters
@@ -104,7 +104,10 @@ class DownloadSoundFile(object):
             'height: 20px !important; width: 20px !important; top: 3px ' +\
             '!important; left: 3px !important; background: '
 
-        self.driver = webdriver.Chrome()
+        options = webdriver.ChromeOptions()
+        if headless:
+            options.add_argument('headless')
+        self.driver = webdriver.Chrome(chrome_options=options)
 
     def openMainBrowser(self):
         """openMainBrowser
