@@ -96,7 +96,7 @@ class DownloadSoundFile(object):
         self.waitTime = waitTime
 
         self.artistName = artistName
-        self.downloadDir = '/home/ygene/다운로드'
+        self.downloadDir = '/home/ygene/다운로드/'
 
         self.baseURL = 'http://convert2mp3.net/index.php'
         # empirically determined
@@ -105,8 +105,17 @@ class DownloadSoundFile(object):
             '!important; left: 3px !important; background: '
 
         options = webdriver.ChromeOptions()
-        if headless:
-            options.add_argument('headless')
+        prefs = {
+            "download.default_directory": self.downloadDir,
+            "directory_upgrade": True,
+            "profile.default_content_settings.popups": 0,
+        }
+        options.add_experimental_option('prefs', prefs)
+        # TODO: headless is not compatible with download path
+        # not a bug
+        # https://stackoverflow.com/questions/42471151/chromium-chrome-headless-file-download-not-working/42583255#42583255
+        # if headless:
+        #     options.add_argument('headless')
         self.driver = webdriver.Chrome(chrome_options=options)
 
     def openMainBrowser(self):
