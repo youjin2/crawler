@@ -77,7 +77,7 @@ class DownloadSoundFile(object):
     extract and save sound file from video link
     """
 
-    def __init__(self, artistName):
+    def __init__(self, artistName, waitTime=20):
         """__init__
 
         Parameters
@@ -93,6 +93,8 @@ class DownloadSoundFile(object):
         # TODO: sometimes title name does not assigned appropriately:w
         # guess it related to the max length of title
         self.maxLen = 10
+        self.waitTime = waitTime
+
         self.artistName = artistName
         self.downloadDir = '/home/ygene/다운로드'
 
@@ -111,7 +113,7 @@ class DownloadSoundFile(object):
         # TODO: sometimes takes too much time for loading main browser
         # don't have any idea..
         self.driver.get(self.baseURL)
-        WebDriverWait(self.driver, 10).\
+        WebDriverWait(self.driver, self.waitTime).\
             until(EC.presence_of_element_located([By.CLASS_NAME, 'span9']))
         # wait few seconds in case of appearing block image
         time.sleep(5)
@@ -137,12 +139,13 @@ class DownloadSoundFile(object):
 
             xButton = self.driver.find_element_by_id(idValue)
             xButton.click()
-            WebDriverWait(self.driver, 10).until(
+            WebDriverWait(self.driver, self.waitTime).until(
                 EC.presence_of_element_located(
                     [By.XPATH,
                      "//button[contains(text(), 'umwandeln')]"]
                 )
             )
+            time.sleep(2)
 
     def passVideoInfo(self, title):
         """passVideoInfo
@@ -180,7 +183,7 @@ class DownloadSoundFile(object):
         inputTitle.send_keys(_title[:self.maxLen])
 
         nextStep.click()
-        WebDriverWait(self.driver, 10).until(
+        WebDriverWait(self.driver, self.waitTime).until(
             EC.presence_of_element_located([By.CLASS_NAME, 'icon-download']))
 
     def download(self, title, url):
@@ -203,7 +206,7 @@ class DownloadSoundFile(object):
         button = self.driver.find_elements_by_xpath(
             "//button[contains(text(), 'umwandeln')]")[0]
         button.click()
-        WebDriverWait(self.driver, 10).until(
+        WebDriverWait(self.driver, self.waitTime).until(
             EC.presence_of_element_located([By.CLASS_NAME,
                                             'form-horizontal']))
         self.passVideoInfo(title)
@@ -223,6 +226,7 @@ class DownloadSoundFile(object):
             for window in self.driver.window_handles[1:]:
                 self.driver.switch_to_window(window)
                 self.driver.close()
+                time.sleep(0.5)
 
         self.driver.switch_to_window(self.driver.window_handles[0])
 
@@ -256,7 +260,7 @@ class DownloadSoundFile(object):
 
             if not finished:
                 print('Downloading Files..')
-                time.sleep(5)
+                time.sleep(10)
             else:
                 print('Download Completed!')
                 break

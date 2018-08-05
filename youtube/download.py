@@ -14,47 +14,21 @@ from collections import namedtuple
 
 import tqdm
 
+import argparse
+from util import ExtractVideoList, DownloadSoundFile
 
-class ExtractVideoList(object):
 
-    def __init__(self, url, n=20):
+def parseArgs():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--url', dest='channelURL', type=str)
+    parsed = parser.parse_args()
 
-        self.url = url
-
-        # pagedown for PhantomJS does not works..
-        # driver = webdriver.PhantomJS()
-        self.driver = webdriver.Chrome()
-        self.driver.get(url)
-        time.sleep(1)
-
-        self.nPageDown = n
-
-        self.video = namedtuple('video', ['title', 'url'])
-
-    def __call__(self):
-
-        bodyTag = self.driver.find_element_by_tag_name("body")
-
-        while self.nPageDown:
-            bodyTag.send_keys(Keys.PAGE_DOWN)
-            time.sleep(0.2)
-            self.nPageDown -= 1
-
-        aTags = bodyTag.find_elements_by_xpath('//div/h3/a')
-
-        videoList = []
-        for a in aTags:
-            title = a.get_attribute('title')
-            url = a.get_attribute('href')
-            videoList.append(self.video(title, url))
-
-        self.driver.close()
-
-        return videoList
+    return parsed
 
 
 if __name__ == '__main__':
+    parsed = parseArgs()
+    url = parsed.channelURL
+    print(url)
 
-    url = 'https://www.youtube.com/channel/UCGDA1e6qQSAH0R9hoip9VrA/videos'
-    videoList = ExtractVideoList(url)()
-    print(videoList)
+
