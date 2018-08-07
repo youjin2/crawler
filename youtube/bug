@@ -1,0 +1,3 @@
+# TODO: try except for timeout error
+# except -> close all browser and open new browser after waiting a few seoncds
+index: 44

@@ -261,6 +261,7 @@ class DownloadSoundFile(object):
             self.openMainBrowser()
             self.download(suffix + video.title, video.url)
             self.closePopUpBrowser()
+            time.sleep(5)
 
         while True:
             files = os.listdir(self.downloadDir)
@@ -298,5 +299,5 @@ if __name__ == '__main__':
         videoList = pickle.load(f)
 
     downloader = DownloadSoundFile('convs')
-    downloader(videoList)
+    downloader(videoList[44:])
 
